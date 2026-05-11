@@ -1,0 +1,63 @@
+import { type ComponentProps } from "react";
+import { cva, type VariantProps } from "class-variance-authority";
+import { Slot } from "radix-ui";
+import { cn } from "@/lib/utils";
+
+const buttonVariants = cva(
+  "inline-flex shrink-0 items-center justify-center gap-2 text-sm font-medium transition-all outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  {
+    variants: {
+      variant: {
+        default:
+          "bg-primary text-primary-foreground font-bold hover:brightness-90 active:scale-95 active:brightness-85 focus-visible:ring-2 focus-visible:ring-primary",
+        secondary:
+          "border border-border bg-background font-bold text-foreground hover:bg-muted active:scale-95 active:brightness-85 focus-visible:ring-2 focus-visible:ring-ring",
+        ghost:
+          "hover:bg-accent hover:text-foreground dark:hover:bg-accent/50 active:scale-95 active:brightness-85 focus-visible:ring-2 focus-visible:ring-ring",
+        link: "text-primary underline-offset-4 underline hover:brightness-90 active:brightness-60",
+        navigation:
+          "text-foreground font-bold uppercase tracking-wider text-xs hover:text-foreground/80 active:text-foreground/70",
+        icon: "border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground transition-all active:scale-95 active:brightness-85 focus-visible:ring-2 focus-visible:ring-ring",
+      },
+      effect: {
+        hoverUnderline:
+          "relative !no-underline after:absolute after:bg-primary after:bottom-2 after:h-[2px] after:w-2/3 after:origin-bottom-right after:scale-x-0 hover:after:origin-bottom-left hover:after:scale-x-100 after:transition-transform after:ease-in-out after:duration-300",
+      },
+      size: {
+        default: "h-10 px-6 py-3 text-base has-[>svg]:px-3",
+        sm: "h-8 gap-1.5 px-3 has-[>svg]:px-2.5",
+        lg: "h-12 text-base px-8 py-3 has-[>svg]:px-5",
+        icon: "size-9",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  }
+);
+
+function Button({
+  className,
+  variant = "default",
+  size = "default",
+  effect,
+  asChild = false,
+  ...props
+}: ComponentProps<"button"> &
+  VariantProps<typeof buttonVariants> & {
+    asChild?: boolean;
+  }) {
+  const Comp = asChild ? Slot.Root : "button";
+  return (
+    <Comp
+      data-slot="button"
+      data-variant={variant}
+      data-size={size}
+      className={cn(buttonVariants({ variant, size, effect, className }))}
+      {...props}
+    />
+  );
+}
+
+export { Button, buttonVariants };
